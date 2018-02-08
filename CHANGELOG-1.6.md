@@ -1,3 +1,9 @@
+# 1.6.x
+
+## Bug fixes
+
+- PIM-7151: Remove family limit used on export profile
+
 # 1.6.21 (2018-01-11)
 
 ## Bug fixes
