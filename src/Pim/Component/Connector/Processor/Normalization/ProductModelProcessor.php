@@ -7,6 +7,7 @@ namespace Pim\Component\Connector\Processor\Normalization;
 use Akeneo\Component\Batch\Item\DataInvalidItem;
 use Akeneo\Component\Batch\Item\ItemProcessorInterface;
 use Akeneo\Component\Batch\Job\JobInterface;
+use Akeneo\Component\Batch\Job\JobParameters;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
 use Akeneo\Component\StorageUtils\Detacher\ObjectDetacherInterface;
@@ -91,6 +92,11 @@ class ProductModelProcessor implements ItemProcessorInterface, StepExecutionAwar
                 ),
             ]
         );
+
+        if ($this->areAttributesToFilter($parameters)) {
+            $attributesToFilter = $this->getAttributesToFilter($parameters);
+            $productModelStandard['values'] = $this->filterValues($productModelStandard['values'], $attributesToFilter);
+        }
 
         if ($parameters->has('with_media') && $parameters->get('with_media')) {
             $directory = $this->stepExecution->getJobExecution()->getExecutionContext()
