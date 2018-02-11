@@ -46,6 +46,7 @@ stage("Build") {
             container("node") {
                 sh "yarn install --no-progress"
                 sh "yarn run webpack"
+                sh "yarn run webpack-test"
             }
             container("docker") {
                 sh "cp .ci/behat.community.yml behat.yml"
@@ -168,6 +169,33 @@ stage("Test") {
                     })
                 } else {
                     echo "Skipping unit test grunt"
+                }
+            },
+            "js-unit": {
+                if (launchUnitTests.equals("yes")) {
+                    withNode({
+                        sh "cd /home/jenkins/pim && yarn run unit"
+                    })
+                } else {
+                    echo "Skipping javascript unit test"
+                }
+            },
+            "js-acceptance": {
+                if (launchUnitTests.equals("yes")) {
+                    withNode({
+                        sh "cd /home/jenkins/pim && npm run acceptance"
+                    })
+                } else {
+                    echo "Skipping javascript acceptance test"
+                }
+            },
+            "js-integration": {
+                if (launchUnitTests.equals("yes")) {
+                    withNode({
+                        sh "cd /home/jenkins/pim && npm run integration"
+                    })
+                } else {
+                    echo "Skipping javascript integration test"
                 }
             },
             "php-coupling-detector": {
