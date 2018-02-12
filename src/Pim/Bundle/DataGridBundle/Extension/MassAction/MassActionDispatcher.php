@@ -13,6 +13,7 @@ use Oro\Bundle\DataGridBundle\Extension\MassAction\MassActionResponseInterface;
 use Pim\Bundle\DataGridBundle\Datasource\ProductDatasource;
 use Pim\Bundle\DataGridBundle\Extension\Filter\FilterExtension;
 use Pim\Bundle\DataGridBundle\Extension\MassAction\Handler\MassActionHandlerInterface;
+use PimEnterprise\Bundle\DataGridBundle\Datasource\ProductProposalDatasource;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -157,7 +158,7 @@ class MassActionDispatcher
         }
 
         $datasource = $datagrid->getDatasource();
-        if ($datasource instanceof ProductDatasource) {
+        if ($datasource instanceof ProductDatasource || $datasource instanceof ProductProposalDatasource) {
             $qb = $datasource->getProductQueryBuilder();
         }
 
