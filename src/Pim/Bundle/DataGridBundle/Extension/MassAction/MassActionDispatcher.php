@@ -13,7 +13,6 @@ use Oro\Bundle\DataGridBundle\Extension\MassAction\MassActionResponseInterface;
 use Pim\Bundle\DataGridBundle\Datasource\ProductDatasource;
 use Pim\Bundle\DataGridBundle\Extension\Filter\FilterExtension;
 use Pim\Bundle\DataGridBundle\Extension\MassAction\Handler\MassActionHandlerInterface;
-use PimEnterprise\Bundle\DataGridBundle\Datasource\ProductProposalDatasource;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -41,27 +40,27 @@ class MassActionDispatcher
     protected $parametersParser;
 
     /** @var array */
-    protected $gridsWithoutMassActionRepository;
+    protected $supportedGridNames;
 
     /**
      * @param MassActionHandlerRegistry  $handlerRegistry
      * @param ManagerInterface           $manager
      * @param RequestParameters          $requestParams
      * @param MassActionParametersParser $parametersParser
-     * @param array                      $gridsWithoutMassActionRepository
+     * @param array                      $supportedGridNames
      */
     public function __construct(
         MassActionHandlerRegistry $handlerRegistry,
         ManagerInterface $manager,
         RequestParameters $requestParams,
         MassActionParametersParser $parametersParser,
-        array $gridsWithoutMassActionRepository
+        array $supportedGridNames
     ) {
         $this->handlerRegistry = $handlerRegistry;
         $this->manager = $manager;
         $this->requestParams = $requestParams;
         $this->parametersParser = $parametersParser;
-        $this->gridsWithoutMassActionRepository = $gridsWithoutMassActionRepository;
+        $this->supportedGridNames = $supportedGridNames;
     }
 
     /**
@@ -158,7 +157,7 @@ class MassActionDispatcher
         }
 
         $datasource = $datagrid->getDatasource();
-        if ($datasource instanceof ProductDatasource || $datasource instanceof ProductProposalDatasource) {
+        if (in_array($parameters['gridName'], $this->supportedGridNames)) {
             $qb = $datasource->getProductQueryBuilder();
         }
 
