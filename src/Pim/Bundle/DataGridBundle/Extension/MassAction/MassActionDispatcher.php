@@ -13,6 +13,7 @@ use Oro\Bundle\DataGridBundle\Extension\MassAction\MassActionResponseInterface;
 use Pim\Bundle\DataGridBundle\Datasource\ProductDatasource;
 use Pim\Bundle\DataGridBundle\Extension\Filter\FilterExtension;
 use Pim\Bundle\DataGridBundle\Extension\MassAction\Handler\MassActionHandlerInterface;
+use PimEnterprise\Bundle\DataGridBundle\Datasource\ProductProposalDatasource;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -39,28 +40,22 @@ class MassActionDispatcher
     /** @var MassActionParametersParser */
     protected $parametersParser;
 
-    /** @var array */
-    protected $supportedGridNames;
-
     /**
      * @param MassActionHandlerRegistry  $handlerRegistry
      * @param ManagerInterface           $manager
      * @param RequestParameters          $requestParams
      * @param MassActionParametersParser $parametersParser
-     * @param array                      $supportedGridNames
      */
     public function __construct(
         MassActionHandlerRegistry $handlerRegistry,
         ManagerInterface $manager,
         RequestParameters $requestParams,
-        MassActionParametersParser $parametersParser,
-        array $supportedGridNames
+        MassActionParametersParser $parametersParser
     ) {
         $this->handlerRegistry = $handlerRegistry;
         $this->manager = $manager;
         $this->requestParams = $requestParams;
         $this->parametersParser = $parametersParser;
-        $this->supportedGridNames = $supportedGridNames;
     }
 
     /**
@@ -157,7 +152,7 @@ class MassActionDispatcher
         }
 
         $datasource = $datagrid->getDatasource();
-        if (in_array($parameters['gridName'], $this->supportedGridNames)) {
+        if ($datasource instanceof ProductDatasource || $datasource instanceof ProductProposalDatasource) {
             $qb = $datasource->getProductQueryBuilder();
         }
 
